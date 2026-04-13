@@ -1,0 +1,102 @@
+use rand::prelude::*;
+use crate::SIZE;
+
+pub enum SortingAlgo {
+    SelectionSort,
+    SimpleSort,
+}
+
+pub struct TableSort {
+    pub table: [i32; SIZE],
+    pub current_index: usize,
+    pub no_swap: bool,
+    pub sorted: bool,
+    pub pivot: usize,
+    pub min_index: usize,
+    pub sort_type: SortingAlgo,
+}
+
+impl TableSort{
+
+    pub fn init(&mut self, sort: SortingAlgo) {
+        for i in 0..SIZE {
+            self.table[i] = 1 + i as i32;
+        }
+
+        self.table.shuffle(&mut rand::rng());
+        println!("Table : {0:?}", self.table);
+
+        self.sort_type = sort;
+        match self.sort_type {
+            SortingAlgo::SelectionSort => {
+                self.pivot = 0;
+            }
+            SortingAlgo::SimpleSort => {
+                self.pivot = SIZE - 1;
+            }
+        }
+    }
+
+    pub fn sort_step(&mut self) {
+        println!("pivot:{}",self.pivot);
+        let current_value = self.table[self.current_index];
+        if self.current_index >= self.pivot {
+            if self.no_swap {
+                self.sorted = true;
+            }
+            self.no_swap = true;
+            self.current_index = 0;
+            self.pivot -= 1;
+            return;
+        }
+        let next_value = self.table[self.current_index + 1];
+
+        if current_value > next_value {
+            let tmp = self.table[self.current_index];
+            self.table[self.current_index] = self.table[self.current_index + 1];
+            self.table[self.current_index + 1] = tmp;
+            self.no_swap = false;
+        }
+
+        if self.current_index < self.pivot {
+            self.current_index += 1;
+        }
+        else {
+            self.current_index = 0;
+        }
+    }
+
+    pub fn selection_sort(&mut self) {
+        let current_value = self.table[self.current_index];
+        println!("pivot2:{}",self.pivot);
+        println!("current_value:{}",current_value);
+        println!("table[min_index]:{}",self.table[self.min_index]);
+        if self.current_index > self.pivot && current_value < self.table[self.min_index] {
+            self.min_index = self.current_index;
+            println!("min_index:{}", self.min_index);
+        }
+        if self.current_index < SIZE - 1 {
+            self.current_index += 1;
+            println!("current_index:{}", self.current_index);
+        }
+        else {
+            let tmp = self.table[self.pivot];
+            self.table[self.pivot] = self.table[self.min_index];
+            self.table[self.min_index] = tmp;
+
+            self.pivot += 1;
+            self.current_index = self.pivot;
+            self.min_index = self.current_index;
+        }
+        if self.pivot == SIZE {
+            self.sorted = true;
+        }
+     
+    }
+    
+    pub fn heapsort(&mut self) {
+        // https://fr.wikipedia.org/wiki/Tri_par_tas
+        // Complexe à afficher étape par étape à cause des boucles multiples.
+    }
+
+}
