@@ -4,6 +4,7 @@ use rand::prelude::*;
 pub enum SortingAlgo {
     SelectionSort,
     SimpleSort,
+    QuickSort,
 }
 
 pub struct TableSort {
@@ -32,6 +33,9 @@ impl TableSort {
             }
             SortingAlgo::SimpleSort => {
                 self.pivot = SIZE - 1;
+            }
+            SortingAlgo::QuickSort => {
+                self.pivot = 0;
             }
         }
     }
@@ -89,5 +93,38 @@ impl TableSort {
     pub fn heapsort(&mut self) {
         // https://fr.wikipedia.org/wiki/Tri_par_tas
         // Complexe à afficher étape par étape à cause des boucles multiples.
+    }
+
+    pub fn quicksort(&mut self, lo: usize, hi: usize) {
+        if lo >= hi {
+            return;
+        }
+        // Partition array and get the pivot index
+        let p: usize = self.partition(lo, hi);
+
+        // Sort the two partitions
+        self.quicksort(lo, p - 1); // Left side of pivot
+        self.quicksort(p + 1, hi); // Right side of pivot
+    }
+
+    pub fn partition(&mut self, lo: usize, hi: usize) -> usize {
+        let pivot = self.table[hi]; // Choose the last element as the pivot
+
+        // Temporary pivot index
+        let mut i = lo;
+
+        for j in lo..hi {
+            // If the current element is less than or equal to the pivot
+            if self.table[j] <= pivot {
+                // Swap the current element with the element at the temporary pivot index
+                self.table.swap(i, j);
+                // Move the temporary pivot index forward
+                i += 1;
+            }
+        }
+        // Swap the pivot with the last element
+        self.table.swap(i, hi);
+
+        i // the pivot index
     }
 }
