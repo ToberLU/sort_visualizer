@@ -4,6 +4,10 @@
 
 ### Niveau Beginner
 
+- [ ] Refactoriser pour utiliser des threads (tri + affichage séparés)
+  - Utiliser `Arc<RwLock<TableSort>>` pour le partage
+  - Thread tri: acquire write lock (écriture)
+  - Thread affichage: acquire read lock (lecture seule)
 - [ ] Corriger SimpleSort pour qu'il soit 100% correct
 - [ ] Ajouter des commentaires éducatifs au code existant
 - [ ] Implémenter une fonctionnalité simple (ex: compteur de comparaisons)

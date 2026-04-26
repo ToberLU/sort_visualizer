@@ -26,7 +26,7 @@ fn main() {
         min_index: 0,
         sort_type: SortingAlgo::SimpleSort,
     };
-    table_sort.init(SortingAlgo::QuickSort);
+    table_sort.init(SortingAlgo::SimpleSort);
 
     let (mut rl, thread) = raylib::init()
         .size(WIDTH, HEIGHT)
