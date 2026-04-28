@@ -1,9 +1,13 @@
 use crate::SIZE;
 use rand::prelude::*;
+use std::thread;
+use std::time::Duration;
 
+#[derive(Debug, Default)]
 pub enum SortingAlgo {
     SelectionSort,
     SimpleSort,
+    #[default]
     QuickSort,
 }
 
@@ -15,6 +19,20 @@ pub struct TableSort {
     pub pivot: usize,
     pub min_index: usize,
     pub sort_type: SortingAlgo,
+}
+
+impl Default for TableSort {
+    fn default() -> Self {
+        Self {
+            table: [0; SIZE], // Initialisation explicite
+            current_index: 0,
+            no_swap: true,
+            sorted: false,
+            pivot: 0,
+            min_index: 0,
+            sort_type: SortingAlgo::default(), // Utilise le Default de l'enum
+        }
+    }
 }
 
 impl TableSort {
@@ -103,7 +121,9 @@ impl TableSort {
         let p: usize = self.partition(lo, hi);
 
         // Sort the two partitions
-        self.quicksort(lo, p - 1); // Left side of pivot
+        if p > 0 {
+            self.quicksort(lo, p - 1); // Left side of pivot
+        }
         self.quicksort(p + 1, hi); // Right side of pivot
     }
 
@@ -114,6 +134,7 @@ impl TableSort {
         let mut i = lo;
 
         for j in lo..hi {
+            thread::sleep(Duration::from_millis(5));
             // If the current element is less than or equal to the pivot
             if self.table[j] <= pivot {
                 // Swap the current element with the element at the temporary pivot index
